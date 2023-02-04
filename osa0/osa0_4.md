@@ -12,7 +12,7 @@ sequenceDiagram
     server-->>browser: HTML dokumentti
     deactivate server
 
-    Note right of browser: HTML-koodi saa aikaan sen, että selain hakee sivun tyylit määrittelevän alla olevan tiedoston main.css
+    Note right of browser: HTML-koodi tuodaan palvelimelta ja se saa aikaan sen, että selain hakee sivun tyylit määrittelevän alla olevan tiedoston main.css
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
