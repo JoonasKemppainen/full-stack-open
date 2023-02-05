@@ -5,7 +5,7 @@ sequenceDiagram
     
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
 
-    Note right of browser: HTTP POST pyyntö palvelimelle jonka jälkeen selainta kehoitetaan tekemään alla oleva uusi GET pyyntö
+    Note right of browser: HTTP POST pyyntö palvelimelle jonka mukana viedään uusi viesti formista. Tämän jälkeen selainta kehoitetaan tekemään alla oleva uusi GET pyyntö, eli sivu päivittyy uudelleen samalla tavalla kuin ensimmäisellä latauskerralla mutta tällä kertaa sisältäen myös uuden viestin
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
