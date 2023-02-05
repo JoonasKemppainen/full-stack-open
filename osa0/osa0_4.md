@@ -1,37 +1,29 @@
 ```mermaid
 sequenceDiagram
-    participant browser
-    participant server
-    
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+User ->> Browser: Käyttäjä submittaa uuden viestin formilla
+Browser ->> Server: POST https://studies.cs.helsinki.fi/exampleapp/notes
+    activate Server
+Server -->> Browser: Uudelleenohjaus sivulle
+    deactivate Server
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate Server
+Server -->> Browser: HTML dokumentin haku
+    deactivate Server
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate Server
+Server -->> Browser: CSS tiedoston haku
+    deactivate Server
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate Server
+Server -->> Browser: JavaScript tiedoston haku
+    deactivate Server
 
-    Note right of browser: HTTP POST pyyntö palvelimelle jonka mukana viedään uusi viesti formista. Tämän jälkeen selainta kehoitetaan tekemään alla oleva uusi GET pyyntö
+Note right of Browser: Selain alkaa suorittaa js koodia joka hakee viestit JSON muodossa serveriltä
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
-    activate server
-    server-->>browser: HTML dokumentti
-    deactivate server
-
-    Note right of browser: HTML-koodi tuodaan palvelimelta ja se saa aikaan sen, että selain hakee sivun tyylit määrittelevän alla olevan tiedoston main.css
+Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate Server
+Server -->> Browser: [{ "content": "viesti", "date": "2023-1-1" }, ...,]
+    deactivate Server
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->>browser: CSS tiedosto
-    deactivate server
-
-    Note right of browser: Sekä alla olevan JavaScript-koodia sisältävän tiedoston main.js
-    
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
-    activate server
-    server-->>browser: JavaScript tiedosto
-    deactivate server
-    
-    Note right of browser: Selain alkaa suorittamaan hakemaansa JavaScript-koodia, joka tekee HTTP GET -pyynnön muistiinpanot json-muotoisena raakadatana palauttavaan osoitteeseen
-    
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>browser: [{ "content": "uusi viesti", "date": "2023-1-1" }, ... ]
-    deactivate server    
-
-    Note right of browser: Datan saapuessa selain suorittaa tapahtumankäsittelijän, joka renderöi DOM-apia hyväksikäyttäen muistiinpanot ruudulle
+Note right of Browser: Selain suorittaa paluufunktion joka renderöi viestit
 ```
