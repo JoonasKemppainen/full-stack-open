@@ -22,5 +22,5 @@ activate server
 server-->>browser: [{ "content": "viesti", "date": "2023-1-1" }, ...,]
 deactivate server
 
-Note right of browser: Selain suorittaa paluufunktion joka renderöi viestit
+Note right of browser: Selain renderöi viestit
 ```

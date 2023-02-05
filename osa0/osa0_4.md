@@ -24,6 +24,6 @@ Browser ->> Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate Server
 Server -->> Browser: [{ "content": "viesti", "date": "2023-1-1" }, ...,]
     deactivate Server
-    
-Note right of Browser: Selain suorittaa paluufunktion joka renderöi viestit
+
+Note right of Browser: Selain renderöi viestit
 ```
