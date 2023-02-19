@@ -1,16 +1,7 @@
-const jwt = require("jsonwebtoken")
+//const jwt = require("jsonwebtoken")
 const Blog = require("../models/blog")
 const blogsRouter = require("express").Router()
-const User = require("../models/user")
-
-const getTokenFrom = request => {
-	const authorization = request.get("authorization")
-	if (authorization && authorization.startsWith("Bearer ")) {
-		console.log(authorization.replace("Bearer ", ""))
-		return authorization.replace("Bearer ", "")
-	}
-	return null
-}
+//const User = require("../models/user")
 
 blogsRouter.get("/", async (request, response) => {
 	const blogs = await Blog.find({}).populate("user", { username: true, name: true, id: true })
@@ -21,14 +12,12 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
 	const body = request.body
 	body.likes = body.likes === undefined ? 0 : body.likes
-	// eslint-disable-next-line no-undef
-	const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-	console.log(decodedToken)
-	if (!decodedToken.id) {
-		return response.status(401).json({error: "token invalid"})
-	}
+	
+	const user = request.user
   
-	const user = await User.findByIdAndDelete(decodedToken)
+	if (!user) {
+		return response.status(401).json({ error: "token invalid" })
+	}
   
 	const blog = new Blog({
 		title: body.title,
@@ -49,6 +38,25 @@ blogsRouter.post("/", async (request, response) => {
 })
 
 blogsRouter.delete("/:id", async (request, response) => {
+	const user = request.user
+
+	if (!user) {
+		return response.status(401).json({ error: "token invalid" })
+	}
+
+	const blog = await Blog.findById(request.params.id)
+
+	if (!blog) {
+		return response.status(404).json({error: "blog not found"})
+	}
+
+	if (blog.user.toString() !== user.id.toString()) {
+		return response(403).json({error: "You dont have permission to delete this blog"})
+	}
+
+	user.blogs = user.blogs.filter(b => b.toString() !== request.params.id.toString())
+	await user.save()
+
 	await Blog.findByIdAndDelete(request.params.id)
 	response.status(204).end()
 })

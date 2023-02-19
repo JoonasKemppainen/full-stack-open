@@ -7,7 +7,21 @@ const bcrypt = require("bcrypt")
 const User = require("../models/user")
 const helper = require("./test_helper")
 
+let token = null
+
 beforeEach(async () => {
+	await User.deleteMany({})
+	const passwordHash = await bcrypt.hash("salasana", 10)
+	const user = new User({ username: "root", passwordHash })
+	await user.save()
+
+	const response = await api
+		.post("/api/login")
+		.send({ username: "root", password: "salasana" })
+		.expect(200)
+
+	token = response.body.token
+
 	await Blog.deleteMany({})
 	await Blog.insertMany(helper.initialBlogs)
 })
@@ -36,6 +50,7 @@ describe("blogs", () => {
 		test("HTTP POST adds a new blog", async () => {
 			await api
 				.post("/api/blogs")
+				.set("Authorization", `Bearer ${token}`)
 				.send(helper.newBlog)
 				.expect(201)
 				.expect("Content-Type", /application\/json/)
@@ -43,10 +58,22 @@ describe("blogs", () => {
 			const blogsAtEnd = await helper.blogsInDb()
 			expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 		})
+
+		test("cant add new blog without token, returns the right status code 401", async () => {
+			await api
+				.post("/api/blogs")
+				.send(helper.newBlog)
+				.expect(401)
+				.expect("Content-Type", /application\/json/)
+	
+			const blogsAtEnd = await helper.blogsInDb()
+			expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+		})
 	
 		test("content of the added blog is correct", async () => {
 			await api
 				.post("/api/blogs")
+				.set("Authorization", `Bearer ${token}`)
 				.send(helper.newBlog)
 				
 			const blogs = await helper.blogsInDb()
@@ -57,6 +84,7 @@ describe("blogs", () => {
 		test("if new added blog has so value for likes it becomes 0", async () => {
 			await api
 				.post("/api/blogs")
+				.set("Authorization", `Bearer ${token}`)
 				.send(helper.noLikes)
 	
 			const blogs = await helper.blogsInDb()
@@ -67,6 +95,7 @@ describe("blogs", () => {
 		test("if added blog has no title 400 bad request is returned", async () => {
 			await api
 				.post("/api/blogs")
+				.set("Authorization", `Bearer ${token}`)
 				.send(helper.noTitle)
 				.expect(400)
 		})
@@ -74,6 +103,7 @@ describe("blogs", () => {
 		test("if added blog has no url 400 bad request is returned", async () => {
 			await api
 				.post("/api/blogs")
+				.set("Authorization", `Bearer ${token}`)
 				.send(helper.noUrl)
 				.expect(400)
 		})
@@ -81,25 +111,41 @@ describe("blogs", () => {
 		test("if added blog has no author 400 bad request is returned", async () => {
 			await api
 				.post("/api/blogs")
+				.set("Authorization", `Bearer ${token}`)
 				.send(helper.noAuthor)
 				.expect(400)
 		})
 	})
 	
 	describe("HTTP DELETE", () => {
-		test("deletes a blog by id", async () => {
-			const blogsAtStart = await helper.blogsInDb()
-			const blogToDelete = await blogsAtStart[0]
-	
+		test("succeeds with status code 204 if id is valid", async () => {
+			const newBlog = {
+				title: "test blog",
+				author: "test author",
+				url: "http://www.testblog.com",
+				likes: 10
+			}
+		
+			const response = await api
+				.post("/api/blogs")
+				.send(newBlog)
+				.set("Authorization", `Bearer ${token}`)
+				.expect(201)
+				.expect("Content-Type", /application\/json/)
+		
+			const blogToDelete = response.body
+			const id = blogToDelete.id
+		
 			await api
-				.delete(`/api/blogs/${blogToDelete.id}`)
+				.delete(`/api/blogs/${id}`)
+				.set("Authorization", `Bearer ${token}`)
 				.expect(204)
-	
+		
 			const blogsAtEnd = await helper.blogsInDb()
-			expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
-	
-			const ids = blogsAtEnd.map(b => b.id)
-			expect(ids).not.toContain(blogToDelete.id)
+			expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+		
+			const titles = blogsAtEnd.map(r => r.title)
+			expect(titles).not.toContain(blogToDelete.title)
 		})
 	})
 	
