@@ -5,7 +5,7 @@ const User = ({ user, handleLogout }) => {
 	return (
 		<div className="user">
 			<strong>{user.name}</strong> logged in {" "}
-			<button type="submit" onClick={handleLogout} >logout</button>
+			<button id="logout-button" type="submit" onClick={handleLogout} >logout</button>
 		</div>
 	)
 }

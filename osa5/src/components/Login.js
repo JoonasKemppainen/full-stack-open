@@ -59,15 +59,15 @@ const Login = ({
 					<tbody>
 						<tr>
 							<td>username:</td>
-							<td><input type="text" name="username" value={username} onChange={handleChange} required /></td>
+							<td><input id="username" type="text" name="username" value={username} onChange={handleChange} required /></td>
 						</tr>
 						<tr>
 							<td>password:</td>
-							<td><input type="password" name="password" value={password} onChange={handleChange} required /></td>
+							<td><input id="password" type="password" name="password" value={password} onChange={handleChange} required /></td>
 						</tr>
 					</tbody>
 				</table>
-				<button type="submit" >login</button>
+				<button id="login-button" type="submit" >login</button>
 			</form>
 		</div>
 	)

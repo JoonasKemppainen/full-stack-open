@@ -24,7 +24,7 @@ const Blogs = ({
 	)
 }
 
-Blog.propTypes = {
+Blogs.propTypes = {
 	setNotification: PropTypes.func.isRequired,
 	setNotificationColor: PropTypes.func.isRequired,
 	setBlogs: PropTypes.func.isRequired

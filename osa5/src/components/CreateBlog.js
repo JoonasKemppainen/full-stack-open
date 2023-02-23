@@ -57,24 +57,24 @@ const CreateBlog = ({
 					<tr>
 						<td>title:</td>
 						<td>
-							<input type="text" name="title" value={title} onChange={handleChange} required />
+							<input id="title" type="text" name="title" value={title} onChange={handleChange} placeholder="title" required />
 						</td>
 					</tr>
 					<tr>
 						<td>author:</td>
 						<td>
-							<input type="text" name="author" value={author} onChange={handleChange} required />
+							<input id="author" type="text" name="author" value={author} onChange={handleChange} placeholder="author" required />
 						</td>
 					</tr>
 					<tr>
 						<td>url:</td>
 						<td>
-							<input type="text" name="url" value={url} onChange={handleChange} required />
+							<input id="url" type="text" name="url" value={url} onChange={handleChange} placeholder="url" required />
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<button type="submit">create</button>
+			<button id="create-button" type="submit">create</button>
 		</form>
 	)
 }
@@ -83,7 +83,6 @@ CreateBlog.propTypes = {
 	setBlogs: PropTypes.func.isRequired,
 	setNotification: PropTypes.func.isRequired,
 	setNotificationColor: PropTypes.func.isRequired,
-	CreateBlogRef: PropTypes.object.isRequired
 }
 
 export default CreateBlog

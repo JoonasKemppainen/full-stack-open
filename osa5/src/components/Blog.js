@@ -76,7 +76,7 @@ const Blog = ({
 				? (
 					<div>
 						{blog.title} {blog.author} {" "}
-						<button onClick={handleView} >view</button>
+						<button id="view-button" onClick={handleView} >view</button>
 					</div>
 				) : (
 					<div>
@@ -96,7 +96,7 @@ const Blog = ({
 								</tr>
 								<tr>
 									<td>Likes:</td>
-									<td>{blog.likes}{" "}<button onClick={handleLike}>like</button></td>
+									<td id="likes">{blog.likes}{" "}<button id="like-button" onClick={handleLike}>like</button></td>
 								</tr>
 								<tr>
 									<td>User:</td>
@@ -104,8 +104,8 @@ const Blog = ({
 								</tr>
 							</tbody>
 						</table>
-						<button onClick={handleView} >hide</button> {" "}
-						{user.username === blog.user.username ? <button className="delete" onClick={handleDelete}>delete</button> : null }
+						<button id="hide-button" onClick={handleView} >hide</button> {" "}
+						{user.username === blog.user.username ? <button id="delete-button" className="delete" onClick={handleDelete}>delete</button> : null }
 					</div>
 				)
 			}
