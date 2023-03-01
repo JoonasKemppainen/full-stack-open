@@ -2,15 +2,22 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { getAnecdotes, updateVote } from './requests'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
+import { useCounterDispatch } from "./CounterContext"
 
 const App = () => {
+  const dispatch = useCounterDispatch()
+
   const queryClient = useQueryClient()
 
   const newVoteMutation = useMutation(updateVote,
     //päivitetään uusi vote myös näytölle
     {
-      onSuccess: () => {
+      onSuccess: (anecdote) => {
         queryClient.invalidateQueries("anecdotes")
+        dispatch({ type: "SHOW", payload: `${anecdote.content} voted`})
+        setTimeout(() => {
+          dispatch({ type: "CLEAR"})
+        }, 5000)
     }
   })
 
