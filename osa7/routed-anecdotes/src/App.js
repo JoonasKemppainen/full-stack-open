@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Routes, Route, Link
+  Routes, Route, Link, useParams
 } from "react-router-dom"
 
 const Menu = () => {
@@ -20,10 +20,25 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id} >
+        <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+      </li>)}
     </ul>
   </div>
 )
+
+const Anecdote = ({ anecdotes }) => {
+  const id = useParams().id
+  // eslint-disable-next-line eqeqeq
+  const anecdote = anecdotes.find(n => n.id == id)
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      has {anecdote.votes} votes
+      for more info see {anecdote.info}
+    </div>
+  )
+}
 
 const About = () => (
   <div>
@@ -132,6 +147,7 @@ const App = () => {
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/about" element={<About />} />
           <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
         </Routes>
       <Footer />
     </div>
