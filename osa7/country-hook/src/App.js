@@ -21,7 +21,6 @@ const useCountry = (name) => {
   useEffect(() => {
     axios.get(`https://restcountries.com/v3.1/name/${name}?fullText=true`)
     .then(res => {
-      console.log(res.data)
       setCountry({found: true, data: {
         name: res.data[0].name.common,
         capital: res.data[0].capital,
