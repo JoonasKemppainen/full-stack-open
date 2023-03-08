@@ -1,12 +1,9 @@
 import { useState } from "react"
-import blogService from "../services/blogs"
 import { createNotification } from "../reducers/notificationReducer"
 import { useDispatch } from "react-redux"
+import { createLike, deleteBlog, initializeBlogs } from "../reducers/blogReducer"
 
-const Blog = ({
-	blog,
-	setBlogs,
-	user }) => {
+const Blog = ({ blog, user }) => {
 	const [viewMore, setViewMore] = useState(false)
 
 	const dispatch = useDispatch()
@@ -20,7 +17,7 @@ const Blog = ({
 		e.preventDefault()
 		try {
 			const newLikes = blog.likes + 1
-			await blogService.like(
+			await dispatch(createLike(
 				blog.id,
 				{
 					user: blog.user,
@@ -28,9 +25,8 @@ const Blog = ({
 					author: blog.author,
 					title: blog.title,
 					url: blog.url
-				})
-			const updatedBlogs = await blogService.getAll()
-			setBlogs(updatedBlogs)
+				}))
+			dispatch(initializeBlogs())
 			dispatch(createNotification(`${blog.title} by ${blog.author} liked!`, "green", 3))
 		} catch (error) {
 			dispatch(createNotification("something went wrong with the like", "red", 3))
@@ -41,9 +37,8 @@ const Blog = ({
 		e.preventDefault()
 		if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`)) {
 			try {
-				await blogService.deleteBlog(blog.id)
-				const updatedBlogs = await blogService.getAll()
-				setBlogs(updatedBlogs)
+				await dispatch(deleteBlog(blog.id))
+				dispatch(initializeBlogs()) 
 				dispatch(createNotification(`${blog.title} by ${blog.author} deleted`, "green", 3))
 			} catch (error) {
 				console.log(error)

@@ -21,8 +21,8 @@ const getAll = async () => {
 	return response.data
 }
 
-const like = async (id, likedBlog) => {
-	const response = await axios.put(`${baseUrl}/${id}`, likedBlog)
+const like = async (id, updatedBlog) => {
+	const response = await axios.put(`${baseUrl}/${id}`, updatedBlog)
 	return response.data
 }
 

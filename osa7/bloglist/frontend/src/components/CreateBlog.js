@@ -1,11 +1,9 @@
 import { useState } from "react"
-import blogService from "../services/blogs"
 import { useDispatch } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
+import { createBlog, initializeBlogs } from "../reducers/blogReducer"
 
 const CreateBlog = ({
-	blogs,
-	setBlogs,
 	CreateBlogRef
 }) => {
 	const [title, setTitle] = useState("")
@@ -17,16 +15,12 @@ const CreateBlog = ({
 	const handleCreate = async e => {
 		e.preventDefault()
 		try {
-			const newBlog = await blogService.create({
-				title, author, url
-			})
-			setBlogs([...blogs, newBlog])
+			await dispatch(createBlog(title, author, url))
+			dispatch(initializeBlogs())
 			dispatch(createNotification(`a new blog ${title} by ${author} added`, "green", 3))
 			setTitle("")
 			setAuthor("")
 			setUrl("")
-			const updatedBlogs = await blogService.getAll()
-			await setBlogs(updatedBlogs)
 			await CreateBlogRef.current.toggleVisibility()
 		} catch (error) {
 			console.log(error)

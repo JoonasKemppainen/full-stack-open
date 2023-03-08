@@ -8,19 +8,17 @@ import Notification from "./components/Notification"
 import Toggleable from "./components/Toggleable"
 import blogService from "./services/blogs"
 import { createNotification } from "./reducers/notificationReducer"
+import { initializeBlogs } from "./reducers/blogReducer"
 
 const App = () => {
-	const [blogs, setBlogs] = useState([])
 	const [user, setUser] = useState(null)
 	const CreateBlogRef = useRef()
 
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		blogService.getAll().then(blogs =>
-			setBlogs( blogs )
-		)
-	}, [])
+		dispatch(initializeBlogs())
+	}, [dispatch])
 
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem("loggedUser")
@@ -55,14 +53,10 @@ const App = () => {
 						buttonLabel="new note"
 						ref={CreateBlogRef}>
 						<CreateBlog
-							blogs={blogs}
-							setBlogs={setBlogs}
 							setUser={setUser}
 							CreateBlogRef={CreateBlogRef} />
 					</Toggleable>
 					<Blogs
-						blogs={blogs}
-						setBlogs={setBlogs}
 						user={user} />
 				</div>
 			}
