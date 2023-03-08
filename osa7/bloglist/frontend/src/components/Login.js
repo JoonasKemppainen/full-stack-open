@@ -1,11 +1,10 @@
 import { useState } from "react"
 import Notification from "./Notification"
-import loginService from "../services/login"
-import blogService from "../services/blogs"
 import { useDispatch } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
+import { loginUser } from "../reducers/userReducer"
 
-const Login = ({setUser}) => {
+const Login = () => {
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 
@@ -15,17 +14,11 @@ const Login = ({setUser}) => {
 		e.preventDefault()
 
 		try {
-			const user = await loginService.login({
-				username, password,
-			})
-			window.localStorage.setItem("loggedUser", JSON.stringify(user))
-			blogService.setToken(user.token)
-			setUser(user)
+			await dispatch(loginUser(username, password))
 			setUsername("")
 			setPassword("")
 			dispatch(createNotification("logged in", "green", 3))
 		} catch (error) {
-			console.log(error)
 			dispatch(createNotification("invalid username of password", "red", 3))
 		}
 	}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useDispatch } from "react-redux"
 import Login from "./components/Login"
 import User from "./components/User"
@@ -6,13 +6,16 @@ import Blogs from "./components/Blogs"
 import CreateBlog from "./components/CreateBlog"
 import Notification from "./components/Notification"
 import Toggleable from "./components/Toggleable"
-import blogService from "./services/blogs"
 import { createNotification } from "./reducers/notificationReducer"
 import { initializeBlogs } from "./reducers/blogReducer"
+import { initializeUser, resetUser } from "./reducers/userReducer"
+import { initializeUsers } from "./reducers/usersReducer"
+import { useSelector } from "react-redux"
 
 const App = () => {
-	const [user, setUser] = useState(null)
 	const CreateBlogRef = useRef()
+
+	const user = useSelector((state) => state.user)
 
 	const dispatch = useDispatch()
 
@@ -21,27 +24,25 @@ const App = () => {
 	}, [dispatch])
 
 	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem("loggedUser")
-		if (loggedUserJSON) {
-			const user = JSON.parse(loggedUserJSON)
-			setUser(user)
-			blogService.setToken(user.token)
-		}
-	}, [])
+		dispatch(initializeUser())
+	}, [dispatch])
+
+	useEffect(() => {
+		dispatch(initializeUsers())
+	}, [dispatch])
 
 	const handleLogout = e => {
 		e.preventDefault()
 		window.localStorage.removeItem("loggedUser")
-		setUser(null)
+		dispatch(resetUser())
 		dispatch(createNotification("logged off", "green", 3))
 	}
 
 	return (
 		<div>
-			{user === null ?
+			{!user ?
 				<div>
-					<Login
-						setUser={setUser} />
+					<Login />
 				</div>
 				:
 				<div>
@@ -53,11 +54,9 @@ const App = () => {
 						buttonLabel="new note"
 						ref={CreateBlogRef}>
 						<CreateBlog
-							setUser={setUser}
 							CreateBlogRef={CreateBlogRef} />
 					</Toggleable>
-					<Blogs
-						user={user} />
+					<Blogs />
 				</div>
 			}
 		</div>

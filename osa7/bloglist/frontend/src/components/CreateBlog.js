@@ -1,22 +1,20 @@
 import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
 import { createBlog, initializeBlogs } from "../reducers/blogReducer"
 
-const CreateBlog = ({
-	CreateBlogRef
-}) => {
+const CreateBlog = ({ CreateBlogRef }) => {
 	const [title, setTitle] = useState("")
 	const [author, setAuthor] = useState("")
 	const [url, setUrl] = useState("")
 
 	const dispatch = useDispatch()
+	const user = useSelector((state) => state.user)
 
 	const handleCreate = async e => {
 		e.preventDefault()
 		try {
-			await dispatch(createBlog(title, author, url))
-			dispatch(initializeBlogs())
+			await dispatch(createBlog(title, author, url, user))
 			dispatch(createNotification(`a new blog ${title} by ${author} added`, "green", 3))
 			setTitle("")
 			setAuthor("")

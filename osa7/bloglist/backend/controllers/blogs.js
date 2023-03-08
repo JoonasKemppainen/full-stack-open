@@ -76,7 +76,7 @@ blogsRouter.put("/:id", async (request, response) => {
 	if (!result) {
 		response.status(404).json({ error: "Blog not found" })
 	} else {
-		response.status(200).json(updatedBlog)
+		response.status(200).json(result)
 	}
 })
 

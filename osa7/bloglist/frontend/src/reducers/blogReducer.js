@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs"
 
 const blogSlice = createSlice({
-    name: "blog",
+    name: "blogs",
     initialState: [],
     reducers: {
         setBlogs(state, action) {
@@ -12,13 +12,15 @@ const blogSlice = createSlice({
             state.push(action.payload)
         },
         likeBlog(state, action) {
-            const updatedBlogs = state.map(blog =>
-                blog.id === action.payload.id ? action.payload : blog
-              );
-              return updatedBlogs;
+            return state.map(blog =>
+                blog.id === action.payload.id ? {
+                    ...blog,
+                    likes: action.payload.likes
+                } : blog
+              )
         },
         removeBlog(state, action) {
-            return state.filter(blog => blog.id !== action.payload.id)
+            return state.filter(blog => blog.id !== action.payload)
         }
     }
 })
@@ -33,19 +35,36 @@ export const initializeBlogs = () => {
     }
 }
 
-export const createBlog = (title, author, url) => {
+export const createBlog = (title, author, url, user) => {
     return async dispatch => {
         const newBlog = await blogService.create({
             title,
             author,
             url
         })
-        dispatch(appendBlog(newBlog))
+        const updatedBlog = {
+            ...newBlog,
+            user: {
+                username: user.username,
+                name: user.name,
+                id: user.id
+            }
+        }
+        dispatch(appendBlog(updatedBlog))
     }
 }
 
-export const createLike = (id, updatedBlog) => {
+export const createLike = (blog) => {
     return async dispatch => {
+        const id = blog.id
+        const newLikes = blog.likes + 1
+        const updatedBlog = {
+            user: blog.user,
+            likes: newLikes,
+            author: blog.author,
+            title: blog.title,
+            url: blog.url
+        }
         const likedBlog = await blogService.like(id, updatedBlog)
         dispatch(likeBlog(likedBlog))
     }
@@ -53,8 +72,7 @@ export const createLike = (id, updatedBlog) => {
 
 export const deleteBlog = (id) => {
     return async dispatch => {
-        console.log("test")
-        const deletedBlog = await blogService.deleteBlog(id)
-        dispatch(removeBlog(deletedBlog))
+        await blogService.deleteBlog(id)
+        dispatch(removeBlog(id))
     }
 }
