@@ -3,16 +3,19 @@ import Notification from "./Notification"
 import { useDispatch } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
 import { loginUser } from "../reducers/userReducer"
+import { Form, Button, FormGroup } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const handleLogin = async e => {
 		e.preventDefault()
-
+		navigate("/")
 		try {
 			await dispatch(loginUser(username, password))
 			setUsername("")
@@ -32,21 +35,15 @@ const Login = () => {
 		<div>
 			<h2>log in to application</h2>
 			<Notification />
-			<form onSubmit={handleLogin} >
-				<table>
-					<tbody>
-						<tr>
-							<td>username:</td>
-							<td><input id="username" type="text" name="username" value={username} onChange={handleChange} required /></td>
-						</tr>
-						<tr>
-							<td>password:</td>
-							<td><input id="password" type="password" name="password" value={password} onChange={handleChange} required /></td>
-						</tr>
-					</tbody>
-				</table>
-				<button id="login-button" type="submit" >login</button>
-			</form>
+			<Form onSubmit={handleLogin} >
+				<FormGroup>
+					<Form.Label>username:</Form.Label>
+					<Form.Control id="username" type="text" name="username" value={username} onChange={handleChange} required  />
+					<Form.Label>password</Form.Label>
+					<Form.Control id="password" type="password" name="password" value={password} onChange={handleChange} required />
+					<Button id="login-button" type="submit" >login</Button>
+				</FormGroup>
+			</Form>
 		</div>
 	)
 }

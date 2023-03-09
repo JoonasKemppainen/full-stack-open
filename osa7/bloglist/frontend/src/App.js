@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Login from "./components/Login"
 import Blogs from "./components/Blogs"
 import CreateBlog from "./components/CreateBlog"
@@ -12,15 +12,13 @@ import User from "./components/User"
 import { initializeBlogs } from "./reducers/blogReducer"
 import { initializeUser } from "./reducers/userReducer"
 import { initializeUsers } from "./reducers/usersReducer"
-import { useSelector } from "react-redux"
 import { Routes, Route} from "react-router-dom"
 
 const App = () => {
 	const CreateBlogRef = useRef()
 
-	const user = useSelector((state) => state.user)
-
 	const dispatch = useDispatch()
+	const user = useSelector((state) => state.user)
 
 	useEffect(() => {
 		dispatch(initializeBlogs())
@@ -35,35 +33,34 @@ const App = () => {
 	}, [dispatch])
 
 	return (
-		<div>
-			{!user ?
-				<div>
-					<Login />
-				</div>
-				:
-				<div>
-					<Menu />
-					<h2>blog app</h2>
-					<Notification />
-					<br />
-					<Routes>
-						<Route path="/" element={
-							<div>
-								<Toggleable
-									buttonLabel="new note"
-									ref={CreateBlogRef}>
-									<CreateBlog
-									CreateBlogRef={CreateBlogRef} />
-								</Toggleable>
-								<Blogs />
-							</div>
-						} />
-						<Route path="/users" element={<Users />} />
-						<Route path="/blogs/:id" element={<Blog />} />
-						<Route path="/users/:id" element={<User />} />
-					</Routes>
-				</div>
+		<div className="container">
+			{!user ? 
+			<Login />
+			:
+			<div>
+				<Menu />
+				<h2>blog app</h2>
+				<Notification />
+				<br />
+				<Routes>
+					<Route path="/" element={
+						<div>
+							<Toggleable
+								buttonLabel="new note"
+								ref={CreateBlogRef}>
+								<CreateBlog
+								CreateBlogRef={CreateBlogRef} />
+							</Toggleable>
+							<Blogs />
+						</div>
+					} />
+					<Route path="/users" element={<Users />} />
+					<Route path="/blogs/:id" element={<Blog />} />
+					<Route path="/users/:id" element={<User />} />
+				</Routes>
+			</div>
 			}
+			
 		</div>
 	)
 }

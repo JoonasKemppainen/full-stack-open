@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
 import { createBlog } from "../reducers/blogReducer"
+import { Button, Form, FormGroup } from "react-bootstrap"
 
 const CreateBlog = ({ CreateBlogRef }) => {
 	const [title, setTitle] = useState("")
@@ -33,32 +34,22 @@ const CreateBlog = ({ CreateBlogRef }) => {
 	}
 
 	return (
-		<form onSubmit={handleCreate} >
+		<div>
 			<h2>create new</h2>
-			<table>
-				<tbody>
-					<tr>
-						<td>title:</td>
-						<td>
-							<input id="title" type="text" name="title" value={title} onChange={handleChange} placeholder="title" required />
-						</td>
-					</tr>
-					<tr>
-						<td>author:</td>
-						<td>
-							<input id="author" type="text" name="author" value={author} onChange={handleChange} placeholder="author" required />
-						</td>
-					</tr>
-					<tr>
-						<td>url:</td>
-						<td>
-							<input id="url" type="text" name="url" value={url} onChange={handleChange} placeholder="url" required />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<button id="create-button" type="submit">create</button>
-		</form>
+			<Form onSubmit={handleCreate}>
+				<FormGroup>
+					<Form.Label>title</Form.Label>
+					<Form.Control id="title" type="text" name="title" value={title} onChange={handleChange} placeholder="title" required />
+					<Form.Label>author</Form.Label>
+					<Form.Control id="author" type="text" name="author" value={author} onChange={handleChange} placeholder="author" required />
+					<Form.Label>url</Form.Label>
+					<Form.Control id="url" type="text" name="url" value={url} onChange={handleChange} placeholder="url" required />
+					<br />
+					<Button id="create-button" type="submit" >create</Button>
+				</FormGroup>
+			</Form>
+			<br />
+		</div>
 	)
 }
 

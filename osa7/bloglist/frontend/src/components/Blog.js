@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { createLike, deleteBlog, createComment } from "../reducers/blogReducer"
 import { useParams, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { Link } from "react-router-dom"
+import { Table, Button, Form, FormGroup } from "react-bootstrap"
 
 const Blog = () => {
 	const [comment, setComment] = useState("")
@@ -58,27 +60,36 @@ const Blog = () => {
 	return (
 		<div>
 			<h2>{blog.title}</h2>
+			
+			<br />
 			<a href={blog.url}>{blog.url}</a>
 			<br />
-			{blog.likes} likes 
-			<button id="like-button" onClick={handleLike}>like</button>
+			<p>{blog.likes} likes </p>
+			<Button id="like-button" onClick={handleLike}>like</Button>
 			<br />
 			<br />
-			added by {blog.user.name}
+			added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
 			<br />
 			{user.username === blog.user.username 
-			? <button id="delete-button" className="delete" onClick={handleDelete}>delete</button> 
+			? <Button variant="danger" id="delete-button" className="delete" onClick={handleDelete}>delete</Button> 
 			: null }
 			<h3>comments</h3>
-			<form onSubmit={handleSubmit}>
-				<input onChange={handleChange} value={comment}/>
-				<button>add comment</button>
-			</form>
-			<ul>
-				{blog.comments.map(comment => 
-					<li key={comment}>{comment}</li>
-				)}
-			</ul>	
+			<Form onSubmit={handleSubmit}>
+				<FormGroup>
+					<Form.Control onChange={handleChange} value={comment} />
+					<Button>add comment</Button>
+				</FormGroup>				
+			</Form>
+			<br />
+			<Table striped>
+				<tbody>
+					{blog.comments.map(comment => 
+						<tr key={comment}>
+							<td>{comment}</td>
+						</tr>
+					)}
+				</tbody>
+			</Table>	
 		</div>
 	)
 }
