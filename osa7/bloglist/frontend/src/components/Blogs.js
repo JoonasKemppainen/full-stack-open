@@ -4,7 +4,7 @@ import { Table } from "react-bootstrap"
 
 const Blogs = () => {
 	const blogs = useSelector((state) => state.blogs)
-
+	
 	return (
 		<Table striped>
 			<tbody>

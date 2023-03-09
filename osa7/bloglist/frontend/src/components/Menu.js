@@ -16,7 +16,7 @@ const Menu = () => {
 		dispatch(resetUser())
 		dispatch(createNotification("logged off", "green", 3))
 	}
-
+	
 	return ( 
 		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
