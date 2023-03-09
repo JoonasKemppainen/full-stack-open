@@ -2,17 +2,14 @@ import { useState } from "react"
 import { createNotification } from "../reducers/notificationReducer"
 import { useDispatch, useSelector } from "react-redux"
 import { createLike, deleteBlog } from "../reducers/blogReducer"
+import { useParams } from "react-router-dom"
 
-const Blog = ({ blog }) => {
-	const [viewMore, setViewMore] = useState(false)
-
+const Blog = () => {
 	const user = useSelector((state) => state.user)
+	const blogs = useSelector((state) => state.blogs)
+	const id = useParams().id
+	const blog = blogs.find(blog => blog.id === id)
 	const dispatch = useDispatch()
-
-	const handleView = e => {
-		e.preventDefault()
-		setViewMore(!viewMore)
-	}
 
 	const handleLike = async e => {
 		e.preventDefault()
@@ -38,46 +35,24 @@ const Blog = ({ blog }) => {
 	}
 
 	return (
-		<div className="blog">
-			{viewMore === false
-				? (
-					<div>
-						{blog.title} {blog.author} {" "}
-						<button id="view-button" onClick={handleView} >view</button>
-					</div>
-				) : (
-					<div>
-						<table>
-							<tbody>
-								<tr>
-									<td>Title:</td>
-									<td>{blog.title}</td>
-								</tr>
-								<tr>
-									<td>Author:</td>
-									<td>{blog.author}</td>
-								</tr>
-								<tr>
-									<td>Url:</td>
-									<td><a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a></td>
-								</tr>
-								<tr>
-									<td>Likes:</td>
-									<td id="likes">{blog.likes}{" "}<button id="like-button" onClick={handleLike}>like</button></td>
-								</tr>
-								<tr>
-									<td>User:</td>
-									<td>{blog.user.name}</td>
-								</tr>
-							</tbody>
-						</table>
-						<button id="hide-button" onClick={handleView} >hide</button> {" "}
-						{user.username === blog.user.username ? <button id="delete-button" className="delete" onClick={handleDelete}>delete</button> : null }
-					</div>
-				)
-			}
+		<div>
+			<h2>{blog.title}</h2>
+			<a href={blog.url}>{blog.url}</a>
+			<br />
+			{blog.likes} likes 
+			<button id="like-button" onClick={handleLike}>like</button>
+			<br />
+			<br />
+			added by {blog.user.name}
+			<br />
+			{user.username === blog.user.username 
+			? <button id="delete-button" className="delete" onClick={handleDelete}>delete</button> 
+			: null }
+
+						
 		</div>
 	)
 }
+
 
 export default Blog

@@ -1,11 +1,24 @@
-const User = ({ user, handleLogout }) => {
+import { useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
 
-	return (
-		<div className="user">
-			<strong>{user.name}</strong> logged in {" "}
-			<button id="logout-button" type="submit" onClick={handleLogout} >logout</button>
-		</div>
-	)
+const User = () => {
+    const id = useParams().id
+    const users = useSelector((state) => state.users)
+    const user = users.find(user => user.id === id)
+    const blogs = useSelector((state) => state.blogs)
+    const userBlogs = blogs.filter(blog => blog.user.id === id)
+
+    return (
+        <div>
+            <h2>{user.name}</h2>
+            <p><strong>added blogs</strong></p>
+            <ul>
+                {userBlogs.map(blog => 
+                    <li key={blog.id}>{blog.title}</li>
+                )}
+            </ul>
+        </div>
+    )
 }
 
 export default User
