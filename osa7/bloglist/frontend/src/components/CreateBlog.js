@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { createNotification } from "../reducers/notificationReducer"
-import { createBlog, initializeBlogs } from "../reducers/blogReducer"
+import { createBlog } from "../reducers/blogReducer"
 
 const CreateBlog = ({ CreateBlogRef }) => {
 	const [title, setTitle] = useState("")

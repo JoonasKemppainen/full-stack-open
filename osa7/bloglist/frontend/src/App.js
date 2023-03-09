@@ -13,7 +13,7 @@ import { initializeBlogs } from "./reducers/blogReducer"
 import { initializeUser } from "./reducers/userReducer"
 import { initializeUsers } from "./reducers/usersReducer"
 import { useSelector } from "react-redux"
-import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom"
+import { Routes, Route} from "react-router-dom"
 
 const App = () => {
 	const CreateBlogRef = useRef()

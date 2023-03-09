@@ -10,6 +10,7 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
 	const body = request.body
 	body.likes = body.likes === undefined ? 0 : body.likes
+	body.comments = body.comments === undefined ? [] : body.comments
 	
 	const user = request.user
   
@@ -22,7 +23,8 @@ blogsRouter.post("/", async (request, response) => {
 		author: body.author,
 		url: body.url,
 		likes: body.likes,
-		user: user._id
+		user: user._id,
+		comments: body.comments
 	})
 
 	if (!blog.title || !blog.url) {
@@ -60,13 +62,14 @@ blogsRouter.delete("/:id", async (request, response) => {
 })
 
 blogsRouter.put("/:id", async (request, response) => {
-	const { title, author, url, likes } = request.body
+	const { title, author, url, likes, comments } = request.body
   
 	const updatedBlog = {
 		title,
 		author,
 		url,
 		likes,
+		comments
 	}
   
 	const result = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, {
