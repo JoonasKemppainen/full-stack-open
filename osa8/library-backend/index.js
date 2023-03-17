@@ -96,7 +96,7 @@ const resolvers = {
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
-          query.author = author._id;
+          query.author = author._id
         } else {
           return []
         }
@@ -112,7 +112,7 @@ const resolvers = {
       return Author.find({})
     },
     me: (root, args, context) => {
-      return context.currentUser;
+      return context.currentUser
     }    
   },
   Author: {
@@ -124,54 +124,54 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args, context) => {
       if (!context.currentUser) {
-        throw new GraphQLError("not authenticated");
+        throw new GraphQLError("not authenticated")
       }
-      let author = await Author.findOne({ name: args.author });
+      let author = await Author.findOne({ name: args.author })
       if (!author) {
-        author = new Author({ name: args.author });
+        author = new Author({ name: args.author })
         try {
-          await author.save();
+          await author.save()
         } catch (error) {
-          throw new GraphQLError("Validation error: " + error.message);
+          throw new GraphQLError("Validation error: " + error.message)
         }
       }
-      const book = new Book({ ...args, author: author._id });
+      const book = new Book({ ...args, author: author._id })
       try {
-        await book.save();
+        await book.save()
       } catch (error) {
         throw new GraphQLError("Validation error: " + error.message);
       }
       const populatedBook = await Book.findById(book._id).populate('author');
-      return populatedBook;
+      return populatedBook
     },
     addAuthor: async (root, args, context) => {
       if (!context.currentUser) {
-        throw new GraphQLError("not authenticated");
+        throw new GraphQLError("not authenticated")
       }
       const author = new Author({
         name: args.name,
         born: args.born
-      });
+      })
       try {
         await author.save();
-        return author;
+        return author
       } catch (error) {
-        throw new GraphQLError("Validation error: " + error.message);
+        throw new GraphQLError("Validation error: " + error.message)
       }
     },
     editAuthor: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("not authenticated");
       }
-      const author = await Author.findOne({ name: args.name });
+      const author = await Author.findOne({ name: args.name })
       if (!author) {
-        return null;
+        return null
       }
-      author.born = args.setBornTo;
+      author.born = args.setBornTo
       try {
-        return await author.save();
+        return await author.save()
       } catch (error) {
-        throw new GraphQLError("Validation error: " + error.message);
+        throw new GraphQLError("Validation error: " + error.message)
       }
     },
     createUser: async (root, args) => {
@@ -184,7 +184,7 @@ const resolvers = {
       }
     },
     login: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
+      const user = await User.findOne({ username: args.username })
     
       if (!user || args.password !== "secret") {
         throw new GraphQLError('wrong credentials', {
@@ -210,13 +210,13 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
   listen: { port: 4000 },
   context: async ({ req }) => {
-    const auth = req ? req.headers.authorization : null;
+    const auth = req ? req.headers.authorization : null
     if (auth && auth.startsWith("Bearer ")) {
-      const decodedToken = jwt.verify(auth.substring(7), process.env.SECRET);
-      const currentUser = await User.findById(decodedToken.id);
-      return { currentUser };
+      const decodedToken = jwt.verify(auth.substring(7), process.env.SECRET)
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
     }
   },
 }).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+  console.log(`Server ready at ${url}`)
 });
