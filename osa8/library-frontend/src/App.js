@@ -9,11 +9,16 @@ import { useApolloClient } from '@apollo/client'
 
 const App = () => {
   const [token, setToken] = useState(null)
+  const [bookAdded, setBookAdded] = useState(false)
 
   const client = useApolloClient()
 
   const style = {
     paddingRight: 10
+  }
+
+  const handleBookAdded = () => {
+    setBookAdded(!bookAdded);
   }
 
   const logout = (event) => {
@@ -39,8 +44,8 @@ const App = () => {
       }
       <Routes>
         <Route path="/" element={<Authors token={token} />} />
-        <Route path="/books" element={<Books token={token} />} />
-        <Route path="/add" element={<NewBook token={token} />} />
+        <Route path="/books" element={<Books token={token} bookAdded={bookAdded} />} />
+        <Route path="/add" element={<NewBook token={token} onBookAdded={handleBookAdded} />} />
         <Route path="/login" element={
           <LoginForm
             token={token}

@@ -105,7 +105,10 @@ const resolvers = {
         query.genres = { $in: [args.genre] }
       }
 
-      const books = await Book.find(query).populate('author');
+      const books = await Book.find(query).populate('author')
+      if (args.genre) {
+        return books.filter((book) => book.genres.includes(args.genre));
+      }
       return books;
     },
     allAuthors: async () => {
@@ -153,7 +156,7 @@ const resolvers = {
         born: args.born
       })
       try {
-        await author.save();
+        await author.save()
         return author
       } catch (error) {
         throw new GraphQLError("Validation error: " + error.message)
@@ -197,7 +200,7 @@ const resolvers = {
         id: user._id,
       }
     
-      return { value: jwt.sign(userForToken, process.env.SECRET) };
+      return { value: jwt.sign(userForToken, process.env.SECRET) }
     },
   }
 }

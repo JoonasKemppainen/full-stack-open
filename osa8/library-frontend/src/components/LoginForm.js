@@ -19,10 +19,14 @@ const LoginForm = ({ token, setToken}) => {
 
     const submit = async (event) => {
         event.preventDefault()
-
-        await login({ variables: {username, password} })
-        setUsername("")
-        setPassword("")
+        try{
+            await login({ variables: {username, password} })
+            setUsername("")
+            setPassword("")
+        }catch(e) {
+            console.log(e)
+        }
+        
     }
 
     return (
