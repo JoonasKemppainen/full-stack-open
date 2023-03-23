@@ -5,7 +5,7 @@ const Recommend = (props) => {
     const result = useQuery(ALL_BOOKS)
     const favGenre = useQuery(ME)
 
-    if (result.loading) {
+    if (result.loading || favGenre.loading) {
         return <div>Loading...</div>
     }
 

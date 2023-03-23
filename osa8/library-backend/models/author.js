@@ -7,11 +7,17 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 4
+    minlength: 4,
   },
   born: {
     type: Number,
   },
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Book',
+    },
+  ],
 })
 
 schema.plugin(uniqueValidator)

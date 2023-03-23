@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client"
 import { ALL_BOOKS } from "../queries"
 import { useState, useEffect } from "react"
 
-const Books = ({bookAdded}) => {
+const Books = (props) => {
   const [genre, setGenre] = useState("")
   const [uniqueGenres, setUniqueGenres] = useState([]);
   const result = useQuery(ALL_BOOKS, {
@@ -10,12 +10,6 @@ const Books = ({bookAdded}) => {
   })
 
   const books = result.data?.allBooks || []
-
-  useEffect(() => {
-    if (bookAdded) {
-      result.refetch()
-    }
-  }, [bookAdded, result])
 
   useEffect(() => {
     const genresSet = new Set()
