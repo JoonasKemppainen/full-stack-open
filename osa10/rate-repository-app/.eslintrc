@@ -1,5 +1,8 @@
 {
-    "plugins": ["react", "react-native"],
+    "parserOptions": {
+      "requireConfigFile": false
+    },
+    "plugins": ["react", "react-native", "jsx"],
     "settings": {
       "react": {
         "version": "detect"
