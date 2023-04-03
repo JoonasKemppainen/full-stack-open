@@ -4,7 +4,8 @@ import Text from "./Text";
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFFFFF",
-        paddingBottom: 10
+        paddingBottom: 20,
+        paddingTop: 10,
     },
     mainContainer: {
         flexDirection: "row",

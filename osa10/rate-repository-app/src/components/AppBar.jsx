@@ -1,4 +1,5 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Link } from 'react-router-native';
 import Constants from 'expo-constants';
 import Text from './Text';
 
@@ -7,16 +8,27 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     paddingLeft: 10,
     height: 100,
-    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
     backgroundColor: "#24292e",
   },
+  link: {
+    marginRight: 20,
+  }
   // ...
 });
 
 const AppBar = () => {
   return (
     <View style={styles.container}>
-        <Text fontWeight="bold" fontSize="subheading" color="white">Repositories</Text>
+      <ScrollView horizontal>
+        <Link to="/" style={styles.link}>
+          <Text fontWeight="bold" fontSize="subheading" color="white">Repositories</Text>
+        </Link>
+        <Link to="/signin" style={styles.link}>
+          <Text fontWeight="bold" fontSize="subheading" color="white">Sign In</Text>
+        </Link>
+      </ScrollView>  
     </View>
     )
 };
